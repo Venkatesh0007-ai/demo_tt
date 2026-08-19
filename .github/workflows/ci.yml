@@ -1,1 +1,17 @@
+name: Test GitHub Action
 
+on:
+  push:
+    branches:
+      - dev_test_bundle
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test message
+        run: echo "GitHub Actions is working!"
