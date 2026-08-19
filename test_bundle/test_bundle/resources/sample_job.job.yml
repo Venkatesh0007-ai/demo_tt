@@ -1,0 +1,28 @@
+# Sample Job Resource
+# This job runs the sample ETL notebook on a schedule
+
+resources:
+  jobs:
+    sample_job:
+      name: "Sample ETL Job"
+      
+      tasks:
+        - task_key: "etl_task"
+          notebook_task:
+            notebook_path: ../src/notebooks/sample_etl.py
+            base_parameters:
+              catalog: "${var.catalog}"
+              schema: "${var.schema}"
+      
+      # Schedule: Run daily at 9 AM
+      schedule:
+        quartz_cron_expression: "0 0 9 * * ?"
+        timezone_id: "UTC"
+        pause_status: "PAUSED"  # Start paused for testing
+      
+      email_notifications:
+        on_failure:
+          - "${workspace.current_user.userName}"
+      
+      # Maximum concurrent runs
+      max_concurrent_runs: 1
