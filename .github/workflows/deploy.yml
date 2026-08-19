@@ -1,15 +1,18 @@
-name: Deploy Databricks PROD
+name: Deploy Databricks Bundle
 
 on:
   push:
     branches:
       - prod_test_bundle
 
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
