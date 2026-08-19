@@ -1,0 +1,39 @@
+# Sample Pipeline Resource
+# This defines a Lakeflow Spark Declarative Pipeline for testing
+
+resources:
+  pipelines:
+    sample_pipeline:
+      name: "Sample Data Pipeline"
+      
+      # Target catalog and schema
+      catalog: "${var.catalog}"
+      target: "${var.schema}"
+      
+      # Pipeline libraries
+      libraries:
+        - notebook:
+            path: ../src/pipeline_code.py
+      
+      # Development mode configuration (automatically set by target mode)
+      # development: true
+      
+      # Continuous or triggered
+      continuous: false
+      
+      # Channel (current or preview)
+      channel: "CURRENT"
+      
+      # Photon acceleration
+      photon: true
+      
+      # Use serverless compute
+      serverless: true
+          
+      # Email notifications
+      notifications:
+        - email_recipients:
+            - "${workspace.current_user.userName}"
+          alerts:
+            - "on-update-failure"
+            - "on-flow-failure"

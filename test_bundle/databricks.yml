@@ -1,0 +1,35 @@
+# Declarative Automation Bundle configuration, more info here: https://docs.databricks.com/en/dev-tools/bundles/settings.html
+bundle:
+  name: "test_bundle"
+
+include:
+  - test_bundle/resources/*.yml
+  - test_bundle/resources/*/*.yml
+
+variables:
+  catalog:
+    description: "Unity Catalog name for tables"
+    default: "workspace"
+  schema:
+    description: "Schema name for tables"
+    default: "default"
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-4a02b2ab-fe29.cloud.databricks.com
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    mode: production
+    workspace:
+      host: https://dbc-4a02b2ab-fe29.cloud.databricks.com
+      # We always use /Users/swadique@conversedatasolutions.com for all resources to make sure we only have a single copy.
+      root_path: /Users/swadique@conversedatasolutions.com/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      # This runs as swadique@conversedatasolutions.com in production. We could also use a service principal here,
+      # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
+      user_name: swadique@conversedatasolutions.com
