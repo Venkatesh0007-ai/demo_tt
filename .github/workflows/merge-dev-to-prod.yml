@@ -17,11 +17,17 @@ jobs:
 
     steps:
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
             --base prod_test_bundle \
             --head dev_test_bundle \
             --state open \
@@ -29,11 +35,15 @@ jobs:
             --jq '.[0].number')
 
           if [ -z "$PR_NUMBER" ]; then
+            echo "Creating Pull Request..."
+
             gh pr create \
+              --repo "${{ github.repository }}" \
               --base prod_test_bundle \
               --head dev_test_bundle \
               --title "Merge dev_test_bundle into prod_test_bundle" \
               --body "Automatically created PR from dev_test_bundle to prod_test_bundle."
+
           else
             echo "PR already exists: #$PR_NUMBER"
           fi
@@ -43,6 +53,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_NUMBER=$(gh pr list \
+            --repo "${{ github.repository }}" \
             --base prod_test_bundle \
             --head dev_test_bundle \
             --state open \
@@ -53,8 +64,10 @@ jobs:
             echo "Merging PR #$PR_NUMBER"
 
             gh pr merge "$PR_NUMBER" \
+              --repo "${{ github.repository }}" \
               --merge \
               --delete-branch=false
+
           else
             echo "No open PR found."
           fi
