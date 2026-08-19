@@ -1,14 +1,14 @@
 resources:
   jobs:
     my_two_task_job:
-      name: ingest-and-transform-job
+      name: prod-ingest-and-transform-job
       tasks:
         - task_key: ingest_task
           notebook_task:
-            notebook_path: ./dev_vk_bundle.ipynb
+            notebook_path: ./prod_vk_bundle.ipynb
 
         - task_key: transform_task
           depends_on:
             - task_key: ingest_task
           notebook_task:
-            notebook_path: ./dev_vk_ingestion.ipynb
+            notebook_path: ./prod_vk_ingestion.ipynb
